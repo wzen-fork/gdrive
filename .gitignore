@@ -1,5 +1,7 @@
 # Ignore bin folder and drive binary
+.idea
 _release/bin
+
 
 # vim files
 .*.sw[a-z]
@@ -8,3 +10,4 @@ Session.vim
 .netrwhist
 gdrive
 gdrive.sh
+.gitignore
