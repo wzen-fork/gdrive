@@ -45,6 +45,11 @@ func main() {
 			Patterns:    []string{"--service-account"},
 			Description: "Oauth service account filename, used for server to server communication without user interaction (filename path is relative to config dir)",
 		},
+		cli.StringFlag{
+			Name:        "desktopAccount",
+			Patterns:    []string{"--desktop-account"},
+			Description: "Oauth desktop account filename, used for client to server communication with user interaction (filename path is relative to config dir)",
+		},
 	}
 
 	handlers := []*cli.Handler{

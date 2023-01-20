@@ -364,6 +364,14 @@ func getOauthClient(args cli.Arguments) (*http.Client, error) {
 		return serviceAccountClient, nil
 	}
 
+	if args.String("desktopAccount") != "" {
+		desktopAccountClient, err := auth.NewDeskTopAccountClient(configDir, args.String("desktopAccount"))
+		if err != nil {
+			return nil, err
+		}
+		return desktopAccountClient, nil
+	}
+
 	tokenPath := ConfigFilePath(configDir, TokenFilename)
 	return auth.NewFileSourceClient(ClientId, ClientSecret, tokenPath, authCodePrompt)
 }
