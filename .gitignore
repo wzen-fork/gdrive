@@ -1,6 +1,6 @@
 # Ignore bin folder and drive binary
 .idea
-_release/bin
+bin
 
 
 # vim files
