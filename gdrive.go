@@ -50,6 +50,11 @@ func main() {
 			Patterns:    []string{"--desktop-account"},
 			Description: "Oauth desktop account filename, used for client to server communication with user interaction (filename path is relative to config dir)",
 		},
+		cli.StringFlag{
+			Name:        "apiKey",
+			Patterns:    []string{"--api-key"},
+			Description: "API Key, used for client to server communication without user interaction (lowest security)",
+		},
 	}
 
 	handlers := []*cli.Handler{

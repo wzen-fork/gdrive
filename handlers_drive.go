@@ -385,6 +385,14 @@ func getConfigDir(args cli.Arguments) string {
 }
 
 func newDrive(args cli.Arguments) *drive.Drive {
+	if args.String("apiKey") != "" {
+		client, err := drive.NewWithAPIKey(args.String("apiKey"))
+		if err != nil {
+			ExitF("Failed getting drive: %s", err.Error())
+		}
+		return client
+	}
+
 	oauth, err := getOauthClient(args)
 	if err != nil {
 		ExitF("Failed getting oauth client: %s", err.Error())

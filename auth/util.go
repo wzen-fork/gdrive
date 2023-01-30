@@ -1,9 +1,14 @@
 package auth
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 )
+
+type Closeable interface {
+	Close() error
+}
 
 func mkdir(path string) error {
 	dir := filepath.Dir(path)
@@ -19,4 +24,17 @@ func fileExists(path string) bool {
 		return true
 	}
 	return false
+}
+
+func silentClose(resource Closeable){
+	err := resource.Close()
+	if err != nil {
+		fmt.Printf("close resource error: %v\n", err)
+	}
+}
+
+func silentError(err error){
+	if err != nil {
+		fmt.Printf("silent error: %v\n", err)
+	}
 }

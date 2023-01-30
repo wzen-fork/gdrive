@@ -42,7 +42,20 @@ func getClient(configDir string,config *oauth2.Config) *http.Client {
 		tok = getTokenFromWeb(config)
 		saveToken(tokFilePath, tok)
 	}
+	if !tok.Valid() {
+		tok = refreshToken(config,tok)
+		saveToken(tokFilePath, tok)
+	}
+
 	return config.Client(context.Background(), tok)
+}
+
+func refreshToken(config *oauth2.Config,token *oauth2.Token) *oauth2.Token{
+	 tok,err := config.TokenSource(context.Background(),token).Token()
+	 if err != nil {
+		 log.Fatalf("Unable to refresh token %v", err)
+	 }
+	 return tok
 }
 
 // Request a token from the web, then returns the retrieved token.
@@ -51,12 +64,12 @@ func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
 	fmt.Printf("Go to the following link in your browser then type the "+
 		"authorization code: \n%v\n", authURL)
 
-	var authCode string // = "4/0AWgavdcpq9JaFoY79jvbHMTnzE7FEsTZHpzp13ZOuy1QH-JN2hIYs1fferkfM0cCHx3Bzw"
+	var authCode string
 	if _, err := fmt.Scan(&authCode); err != nil {
 		log.Fatalf("Unable to read authorization code %v", err)
 	}
 
-	tok, err := config.Exchange(context.TODO(), authCode)
+	tok, err := config.Exchange(context.Background(), authCode)
 	if err != nil {
 		log.Fatalf("Unable to retrieve token from web %v", err)
 	}
@@ -69,7 +82,7 @@ func tokenFromFile(file string) (*oauth2.Token, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
+	defer silentClose(f)
 	tok := &oauth2.Token{}
 	err = json.NewDecoder(f).Decode(tok)
 	return tok, err
@@ -82,6 +95,6 @@ func saveToken(path string, token *oauth2.Token) {
 	if err != nil {
 		log.Fatalf("Unable to cache oauth token: %v", err)
 	}
-	defer f.Close()
-	json.NewEncoder(f).Encode(token)
+	defer silentClose(f)
+	silentError(json.NewEncoder(f).Encode(token))
 }
