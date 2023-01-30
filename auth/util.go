@@ -26,14 +26,14 @@ func fileExists(path string) bool {
 	return false
 }
 
-func silentClose(resource Closeable){
+func silentClose(resource Closeable) {
 	err := resource.Close()
 	if err != nil {
 		fmt.Printf("close resource error: %v\n", err)
 	}
 }
 
-func silentError(err error){
+func silentError(err error) {
 	if err != nil {
 		fmt.Printf("silent error: %v\n", err)
 	}

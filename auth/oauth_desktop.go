@@ -27,11 +27,11 @@ func NewDeskTopAccountClient(configDir, desktopAccountFile string) (*http.Client
 		return nil, fmt.Errorf("unable to parse client secret file to config: %v", err)
 	}
 
-	return getClient(configDir,config), nil
+	return getClient(configDir, config), nil
 }
 
 // Retrieve a token, saves the token, then returns the generated client.
-func getClient(configDir string,config *oauth2.Config) *http.Client {
+func getClient(configDir string, config *oauth2.Config) *http.Client {
 	// The file token.json stores the user's access and refresh tokens, and is
 	// created automatically when the authorization flow completes for the first
 	// time.
@@ -43,19 +43,19 @@ func getClient(configDir string,config *oauth2.Config) *http.Client {
 		saveToken(tokFilePath, tok)
 	}
 	if !tok.Valid() {
-		tok = refreshToken(config,tok)
+		tok = refreshToken(config, tok)
 		saveToken(tokFilePath, tok)
 	}
 
 	return config.Client(context.Background(), tok)
 }
 
-func refreshToken(config *oauth2.Config,token *oauth2.Token) *oauth2.Token{
-	 tok,err := config.TokenSource(context.Background(),token).Token()
-	 if err != nil {
-		 log.Fatalf("Unable to refresh token %v", err)
-	 }
-	 return tok
+func refreshToken(config *oauth2.Config, token *oauth2.Token) *oauth2.Token {
+	tok, err := config.TokenSource(context.Background(), token).Token()
+	if err != nil {
+		log.Fatalf("Unable to refresh token %v", err)
+	}
+	return tok
 }
 
 // Request a token from the web, then returns the retrieved token.
